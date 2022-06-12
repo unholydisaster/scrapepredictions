@@ -21,7 +21,7 @@ export default function Home({data}) {
   )
 }
 
-export async function getStaticProps(){
+export async function getServerSideProps(){
   const predictions=[]  
   const predictions1=[]
   
@@ -44,18 +44,20 @@ export async function getStaticProps(){
       })
   })
 
+  
 
-
-
+  
   } catch (error) {
     console.log
   }
 
-  console.log(predictions)
+  const cleanpredictions=[...new Set(predictions)]
+
+  console.log(cleanpredictions)
 
   return{
     props:{
-      data:predictions,   
+      data:cleanpredictions,   
       revalidate: time,
     }
   }
