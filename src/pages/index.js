@@ -22,10 +22,9 @@ export default function Home({data}) {
 }
 
 export async function getServerSideProps(){
-  const predictions=[]  
-  const predictions1=[]
   
-  const time=60*60*6
+
+const cleanpredictions=[]
   try {
     const results=await axios.get('https://confirmbets.com/home/index')
     const html=await results.data;
@@ -33,32 +32,35 @@ export async function getServerSideProps(){
     console.log($.html()) 
     
     
-    $('td:contains("Vs")', html).each(function(){
-      const teams=$(this).text().trim()
-      const pick=$(this).next().text().trim()
-     
-      predictions.push({
-          teams,
-          pick,
-    
-      })
-  })
+    $( 'td.outcome', html).each(function(){
+     const countrys=$(this).text().trim();
+     const leagues=(this).next().text().trim()  
+    })
+
+    $('td:contains("Vs")', html).each(function() {
+     const teams=$(this).text().trim()
+     const picks=$(this).next().text().trim()
+    });
 
   
+    const map=new Map()
+  map.set("data",{teams}) 
 
-  
+ 
+  const bigdata=[...map.values()]
+  console.log(bigdata)
+
   } catch (error) {
     console.log
   }
 
-  const cleanpredictions=[...new Set(predictions)]
 
-  console.log(cleanpredictions)
+  
+  console.log
 
   return{
     props:{
-      data:cleanpredictions,   
-      revalidate: time,
+      data:cleanpredictions|?||>,,   
     }
   }
 }
